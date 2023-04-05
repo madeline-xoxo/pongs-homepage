@@ -31,18 +31,18 @@ function App() {
       openCurrent: true,
     }
   ] as File[];
-  window.onload = function() {
+  window.onload = function () {
     //  alert(navigator.userAgent);
-      if (navigator.userAgent.indexOf("Firefox") > 0) {
-          alert("hii! this is a bit awkward but firefox doesn't support the clipboard api. as such, you won't be able to paste into my little terminal. sorry!");
-      }
+    if (navigator.userAgent.indexOf("Firefox") > 0) {
+      alert("hii! this is a bit awkward but firefox doesn't support the clipboard api. as such, you won't be able to paste into my little terminal. sorry!");
+    }
   }
   async function handleInput(e: KeyboardEvent) {
-    const characters = [...Array(95).keys()].map(i => String.fromCharCode(i+32)); // every typeable character, see https://stackoverflow.com/a/71085063
+    const characters = [...Array(95).keys()].map(i => String.fromCharCode(i + 32)); // every typeable character, see https://stackoverflow.com/a/71085063
     e.preventDefault();
     window.getSelection()?.removeAllRanges();
     const terminal = document.getElementById('terminal')!;
-    const input =  document.getElementById('input')!;
+    const input = document.getElementById('input')!;
     let typedText = input.innerText;
     document.getAnimations().forEach(animation => {
       animation.cancel();
@@ -84,7 +84,17 @@ function App() {
           terminal.append(potentialFiles.map(f => f.name).join('   '))
           document.getElementById('input')!.id = "";
           terminal.innerHTML += `<div class="line"><span class="hostname">[madeline@b0ss.net <span class="directory">~</span>]</span><span class="bash">$ </span><span id="input" /></div>`
-          document.getElementById('input')!.innerText = typedText;
+          const input = document.getElementById('input')!;
+          input.innerHTML = "";
+          const stupidFuckingArrayWeNeed = typedText.match(/^([^\s]+\s)(.*)$/) || [""];
+          const commandElement = document.createElement('span');
+          commandElement.classList.add('command');
+          commandElement.innerText = stupidFuckingArrayWeNeed[1] || typedText;
+          input.append(commandElement)
+          const paramElement = document.createElement('span');
+          paramElement.classList.add('param');
+          paramElement.innerText = stupidFuckingArrayWeNeed[2] || "";
+          input.append(paramElement)
           terminal.scrollTop = terminal.scrollHeight;
         }
         break;
@@ -96,12 +106,22 @@ function App() {
             break;
           }
           case "ls": {
-            let filesString = "";
-            files.forEach(file => {
-              filesString += file.name + "   ";
-            })
-            terminal.append(filesString);
-            break;
+            if (parsed.slice(-1)[0] === "ls") {
+              let filesString = "";
+              files.forEach(file => {
+                filesString += file.name + "   ";
+              })
+              terminal.append(filesString);
+              break;
+            } else {
+              const directory = files.filter(file => file.name === parsed.slice(-1)[0])[0];
+              if (!directory) {
+                terminal.append(`mash: ls: cannot access '${parsed.slice(-1)[0]}': no such file or directory`)
+                break;
+              }
+              terminal.append(directory.url);
+              break;
+            }
           }
           case "cd": {
             if (parsed.slice(-1)[0] === "cd") break;
@@ -184,11 +204,11 @@ function App() {
             <div className="command">cd <span className="param">(limited)</span></div>
           </div>
           <div className="line">
-          <span className="hostname">
-            [madeline@b0ss.net <span className="directory">~</span>]
-          </span>
-          <span className="bash">$ </span>
-          <span id="input" />
+            <span className="hostname">
+              [madeline@b0ss.net <span className="directory">~</span>]
+            </span>
+            <span className="bash">$ </span>
+            <span id="input" />
           </div>
         </div>
       </div>
