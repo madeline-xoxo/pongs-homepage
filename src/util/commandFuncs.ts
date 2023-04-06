@@ -67,15 +67,22 @@ createCommand('cd', (command, terminal, write) => {
         }
     })
     if (defaultHit) return false;
+    let found = false;
     files.find(file => {
         console.log(file)
         if (file.name === dir) {
             if (file.openCurrent) window.location.href = file.url;
             else window.open(file.url);
+            found = true;
             return true;
         }
     })
-    return true;
+    if (found) {
+        return true;
+    } else {
+        write(`${dir}: no such file or directory`, terminal, true, command[0])
+        return false;
+    }
 })
 
 createCommand('echo', (command, terminal, write) => {
@@ -86,6 +93,10 @@ createCommand('echo', (command, terminal, write) => {
 createCommand('neofetch', (command, terminal, write) => {
     // only if you want arguments only
     // if (command.length === 1) return true;
+    // if (navigator.doNotTrack) {
+    //     write(`do not track detected. exiting...`, terminal, true, command[0]);
+    //     return false;
+    // }
     const args = command.slice(1).filter(cmd => cmd.startsWith('-')).map(cmd => cmd.replace('-', ''));
     let defaultHit = false;
     args.every(arg => {
@@ -129,7 +140,24 @@ createCommand('neofetch', (command, terminal, write) => {
     const neofetch = document.createElement('div');
     neofetch.classList.add('neofetch');
     neofetch.append(img);
-    neofetch.append(`browser: ${browser}\ni don't know what else to put here`)
+    neofetch.append(`browser: ${browser}\nresolution: ${window.screen.width}x${window.screen.height}\nos: ${(() => {
+        let os = navigator.userAgent;
+        let finalOS = "unknown";
+        if (os.search('Windows') !== -1) {
+            finalOS = "windows";
+        }
+        else if (os.search('Mac') !== -1) {
+            finalOS = "macOS";
+        }
+        else if (os.search('X11') !== -1 && !(os.search('Linux') !== -1)) {
+            finalOS = "unix";
+        }
+        else if (os.search('Linux') !== -1 && os.search('X11') !== -1) {
+            finalOS = "linux"
+        }
+
+        return finalOS;
+    })()}${(navigator as any).deviceMemory ? `\ntotal memory: ${(navigator as any).deviceMemory}GB` : ''}`)
     write(neofetch, terminal, false, command[0]);
     return true;
 })
