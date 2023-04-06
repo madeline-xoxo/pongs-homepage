@@ -76,7 +76,7 @@ export function createCommand(name: string, func: (args: string[], terminal: HTM
     commands.push({
         name: name,
         function: func,
-        unlisted: name === './',
+        unlisted: name === './' || name == 'base',
     })
 }
 
