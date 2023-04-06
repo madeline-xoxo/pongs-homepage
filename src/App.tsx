@@ -106,7 +106,7 @@ function App() {
             break;
           }
           case "ls": {
-            if (parsed.slice(-1)[0] === "ls") {
+            if (parsed.slice(-1)[0].trim() === "ls") {
               let filesString = "";
               files.forEach(file => {
                 filesString += file.name + "   ";
@@ -124,7 +124,7 @@ function App() {
             }
           }
           case "cd": {
-            if (parsed.slice(-1)[0] === "cd") break;
+            if (parsed.slice(-1)[0].trim() === "cd") break;
             switch (parsed.slice(-1)[0]) {
               case ".":
               case "./": {
