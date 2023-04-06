@@ -50,11 +50,14 @@ function App() {
     })
     switch (e.key) {
       case "ArrowUp": {
-        const previous = (terminal.lastChild! as Element).previousElementSibling?.lastElementChild as HTMLDivElement;
-        if (previous) {
-          if (!previous.parentElement?.classList.contains('line')) break;
-          typedText = previous.innerText;
-        }
+        // const previous = (terminal.lastChild! as Element).previousElementSibling?.lastElementChild as HTMLDivElement;
+        // if (previous) {
+        //   if (!previous.parentElement?.classList.contains('line')) break;
+        //   typedText = previous.innerText;
+        // }
+        // break;
+        const lines = Array.from(document.getElementsByClassName('line') as HTMLCollectionOf<HTMLDivElement>);
+        typedText = (lines.slice(-2)[0].lastElementChild as HTMLDivElement).innerText;
         break;
       }
       case "ArrowDown": {
