@@ -217,6 +217,10 @@ createCommand('which', (command, terminal, write) => {
 createCommand('./', (command, terminal, write) => {
     const args = command;
     args[0] = args[0].replace('./', '');
+    if (args.filter(arg => arg.startsWith('-')).length > 0) {
+        write(`unrecognized option -- '${args.filter(arg => arg.startsWith('-'))[0].replace('-', '')}'`, terminal, true, args[0]);
+        return false;
+    }
     let fileFound = false;
     files.find(file => {
         if (file.name === args[0]) {

@@ -118,9 +118,9 @@ export async function handleInput(e: KeyboardEvent) {
                 temparray.pop();
                 temparray.push(potentialFiles[0].name)
                 if (typedText.split(' ').slice(-1)[0].startsWith('./')) {
-                    typedText = `./${temparray.join(' ')}`;
+                    typedText = `./${temparray.join(' ')} `;
                 } else {
-                    typedText = temparray.join(' ');
+                    typedText = temparray.join(' ') + ' ';
                 }
                 break;
             }
