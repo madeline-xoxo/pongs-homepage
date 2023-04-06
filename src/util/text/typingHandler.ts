@@ -80,9 +80,9 @@ export function type(e: KeyboardEvent) {
 	} else {
 		text += e.key;
 	}
-	const [command, parameters] = parse(text);
+	const tokens = parse(text);
 	input.innerHTML = ""; // kind of bad
-	input.append(command, parameters);
+	tokens.forEach(token => input.append(token));
 	const terminal = document.getElementById("terminal")!;
 	terminal.scrollTop = terminal.scrollHeight;
 }

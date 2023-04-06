@@ -51,6 +51,3 @@ new Command("./", function(this: Command, args) {
 	}
 	file.openCurrent ? window.location.href = file.url : window.open(file.url);
 });
-
-
-console.log(commands);
