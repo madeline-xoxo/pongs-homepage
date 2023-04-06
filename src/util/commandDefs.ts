@@ -144,7 +144,8 @@ export async function handleInput(e: KeyboardEvent) {
             break;
         }
         case "Enter": {
-            let parsed = typedText.split(' ');
+            let parsed = typedText.split(' ').filter(item => item !== " ").filter(item => item !== "");
+            console.log(parsed)
             const command = commands.filter(command => command.name === parsed[0])[0];
             if (command) {
                 command.function(parsed, terminal, write);
