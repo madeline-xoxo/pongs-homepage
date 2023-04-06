@@ -39,7 +39,7 @@ function App() {
   }
   async function handleInput(e: KeyboardEvent) {
     const characters = [...Array(95).keys()].map(i => String.fromCharCode(i + 32)); // every typeable character, see https://stackoverflow.com/a/71085063
-    if (e.key !== "Tab" && (e.key !== "R" && e.ctrlKey)) e.preventDefault();
+    if ((e.key !== "R" && e.ctrlKey)) e.preventDefault();
     window.getSelection()?.removeAllRanges();
     const terminal = document.getElementById('terminal')!;
     const input = document.getElementById('input')!;
