@@ -40,6 +40,12 @@
   cursor: default;
   overflow: auto;
   color: #6d8187;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+#terminal::-webkit-scrollbar { 
+  display: none;
 }
 
 .hostname {

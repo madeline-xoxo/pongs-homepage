@@ -1,4 +1,4 @@
-import { createCommand, files } from "./commandDefs";
+import { commands, createCommand, files, jsxToHtmlElement } from "./commandDefs";
 
 createCommand('base', (command, terminal, write) => {
     // only if you want arguments only
@@ -41,7 +41,7 @@ createCommand('ls', (command, terminal, write) => {
     if (folder !== "ls") {
         files.find(file => { // scuffed
             if (file.name === folder) {
-                write(file.url, terminal, false, command[0]);
+                write(`~/${file.name}`, terminal, false, command[0]);
                 found = true;
                 return true;
             }
@@ -168,5 +168,67 @@ createCommand('clear', (command, terminal, write) => {
 })
 
 createCommand('', (command, terminal, write) => {
+    return true;
+})
+
+createCommand('help', (command, terminal, write) => {
+    const cmds = commands.map(command => {
+        if (command.unlisted) return;
+        return jsxToHtmlElement(<div key={command.name} className="command">{command.name}</div>);
+    }).filter(e => e !== undefined);
+    terminal.append(jsxToHtmlElement(<div className="help"></div>))
+    const help = Array.from(document.getElementsByClassName('help')).slice(-1)[0];
+    cmds.forEach(cmd => help.append(cmd!))
+    return true;
+})
+
+createCommand('which', (command, terminal, write) => {
+    const args = command.slice(1).filter(cmd => cmd.startsWith('-')).map(cmd => cmd.replace('-', ''));
+    const folder = command[command.length - 1];
+    if (command.length === 1) {
+        write(`at least one argument is required`, terminal, true, command[0])
+        return false;
+    };
+    let defaultHit = false;
+    args.every(arg => {
+        switch (arg) {
+            default: {
+                write(`invalid option -- '${arg}'`, terminal, true, command[0]);
+                defaultHit = true;
+                return false;
+            }
+        }
+    })
+    if (defaultHit) return false;
+    let found = false;
+    if (folder !== "ls") {
+        files.find(file => { // scuffed
+            if (file.name === folder) {
+                write(file.url, terminal, false, command[0]);
+                found = true;
+                return true;
+            }
+        })
+    }
+    if (!found) write(`no ${folder} in (~)`, terminal, true, command[0])
+    return true;
+})
+
+createCommand('./', (command, terminal, write) => {
+    const args = command;
+    args[0] = args[0].replace('./', '');
+    let fileFound = false;
+    files.find(file => {
+        if (file.name === args[0]) {
+            fileFound = true;
+            if (file.openCurrent) window.location.href = file.url;
+            else window.open(file.url);
+            return;
+        }
+    })
+    if (!fileFound) {
+        write(`mash: ${args[0]}: no such file or directory`, terminal, false, "")
+        return false;
+    }
     return true;
 })

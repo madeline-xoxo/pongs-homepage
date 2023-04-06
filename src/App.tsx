@@ -35,12 +35,12 @@ function App() {
       <div id="frame">
         <div id="terminal">
           <div>
-            {date !== 'none' ? <div><span className='directory'>last login:</span> <span className='hostname'>{date}</span><br />y</div> : null}
+            {date !== 'none' ? <div><span className='directory'>last login:</span> <span className='hostname'>{date}</span><br /></div> : null}
             welcome! available commands:<br />
             <div className="help">
               {
                 commands.map(command => {
-                  return <div key={command.name} className="command">{command.name}</div>
+                  return !command.unlisted ? <div key={command.name} className="command">{command.name}</div> : null;
                 })
               }
               

@@ -1,9 +1,11 @@
+import ReactDOMServer from "react-dom/server";
 
 export const commands: Command[] = [];
 
 export interface Command {
     function: (command: string[], terminal: HTMLElement, write: (text: any, terminal: HTMLElement, failure: boolean, name: string) => void) => boolean;
     name: string;
+    unlisted?: boolean;
 }
 
 export interface File {
@@ -22,6 +24,13 @@ export function write(text: any, terminal: HTMLElement, failure: boolean, name: 
         terminal.append(text)
     }
 }
+
+export function jsxToHtmlElement(jsx: JSX.Element) {
+    const html = ReactDOMServer.renderToStaticMarkup(jsx);
+    const container = document.createElement('div');
+    container.innerHTML = html;
+    return container.firstChild as Node;
+  }
 
 export const files = [
     {
@@ -67,7 +76,7 @@ export function createCommand(name: string, func: (args: string[], terminal: HTM
     commands.push({
         name: name,
         function: func,
-        
+        unlisted: name === './',
     })
 }
 
@@ -101,14 +110,18 @@ export async function handleInput(e: KeyboardEvent) {
             break;
         }
         case "Tab": {
-            let parsed = typedText.split(' ').slice(-1)[0];
+            let parsed = typedText.split(' ').slice(-1)[0].split('./').slice(-1)[0];
             const potentialFiles = files.filter(file => file.name.startsWith(parsed));
             if (potentialFiles.length === 0) break;
             if (potentialFiles.length === 1) {
                 const temparray = typedText.split(' ');
                 temparray.pop();
                 temparray.push(potentialFiles[0].name)
-                typedText = temparray.join(' ');
+                if (typedText.split(' ').slice(-1)[0].startsWith('./')) {
+                    typedText = `./${temparray.join(' ')}`;
+                } else {
+                    typedText = temparray.join(' ');
+                }
                 break;
             }
             if (potentialFiles.length > 1) {
@@ -136,7 +149,13 @@ export async function handleInput(e: KeyboardEvent) {
             if (command) {
                 command.function(parsed, terminal, write);
             } else {
-                terminal.append(`mash: ${parsed[0]}: command not found`)
+                if (typedText.startsWith('./')) {
+                    // commands.find(command => command.name === "./")!.function(typedText.replace('./', '').split(' '), terminal, write)
+                    const command2 = commands.find(command => command.name === "./");
+                    command2!.function(parsed, terminal, write)
+                } else {
+                    terminal.append(`mash: ${parsed[0]}: command not found`)
+                }
             }
             // switch (parsed[0]) {
             //     case "": {
