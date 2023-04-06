@@ -27,3 +27,4 @@ jobs:
           allow_empty_commit: true
           commit_message: "Deploy from GitHub Actions"
           force_orphan: true
+          base_href: /pongs-homepage/
