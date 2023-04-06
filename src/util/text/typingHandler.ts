@@ -26,8 +26,6 @@ function shouldType(key: string): boolean {
 }
 
 export function type(e: KeyboardEvent) {
-	const terminal = document.getElementById("terminal")!;
-	terminal.scrollTop = terminal.scrollHeight;
 	const input = document.getElementById("input")!;
 	let text = input.innerText;
 	if (!shouldType(e.key)) {
@@ -38,4 +36,6 @@ export function type(e: KeyboardEvent) {
 	const [command, parameters] = parse(text);
 	input.innerHTML = ""; // kind of bad
 	input.append(command, parameters);
+	const terminal = document.getElementById("terminal")!;
+	terminal.scrollTop = terminal.scrollHeight;
 }
