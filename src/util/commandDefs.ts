@@ -138,7 +138,6 @@ export async function handleInput(e: KeyboardEvent) {
             } else {
                 terminal.append(`mash: ${parsed[0]}: command not found`)
             }
-
             // switch (parsed[0]) {
             //     case "": {
             //         break;
@@ -263,8 +262,11 @@ export async function handleInput(e: KeyboardEvent) {
             //         break;
             //     }
             // }
+            const input = document.getElementById('input');
+            if (input) {
+                input.id = "";
+            }
             terminal.innerHTML += `<div class="line"><span class="hostname">[madeline@b0ss.net <span class="directory">~</span>]</span><span class="bash">$ </span><span id="input" /></div>`
-            document.getElementById('input')!.id = "";
             terminal.scrollTop = terminal.scrollHeight;
             return;
         }

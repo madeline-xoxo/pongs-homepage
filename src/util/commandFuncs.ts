@@ -161,3 +161,12 @@ createCommand('neofetch', (command, terminal, write) => {
     write(neofetch, terminal, false, command[0]);
     return true;
 })
+
+createCommand('clear', (command, terminal, write) => {
+    terminal.innerHTML = "";
+    return true;
+})
+
+createCommand('', (command, terminal, write) => {
+    return true;
+})

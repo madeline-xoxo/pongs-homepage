@@ -35,7 +35,7 @@ function App() {
       <div id="frame">
         <div id="terminal">
           <div>
-            {date !== 'none' ? <div><span className='directory'>last login:</span> <span className='hostname'>{date}</span><br /></div> : null}
+            {date !== 'none' ? <div><span className='directory'>last login:</span> <span className='hostname'>{date}</span><br />y</div> : null}
             welcome! available commands:<br />
             <div className="help">
               {
@@ -56,7 +56,7 @@ function App() {
         </div>
       </div>
       <div id="footer">
-        {`(just so we're all clear here, mash is a portmanteau of "madeline" and "bash".) ${date}`}
+        {`(just so we're all clear here, mash is a portmanteau of "madeline" and "bash".)`}
       </div>
     </div>
   )
