@@ -15,13 +15,14 @@
   border: solid thin #a0aba9;
   background-color: #fdf6e3;
   box-sizing: border-box;
-  padding: 54px;
+  padding: 3vw;
   z-index: 2;
-  box-shadow: 0px 12px 50px -13px rgba(0,0,0,0.23);
+  /* box-shadow: 0px 12px 50px -13px rgba(0,0,0,0.23); */
   border-radius: 5px;
 }
 
 #terminal {
+  margin-top: -6px;
   width: 100%;
   height: 100%;
   background-color: #eee8d5;
@@ -33,8 +34,8 @@
   white-space: pre-wrap;
   line-break: anywhere;
   word-break: break-all;
-  box-shadow: 0px 12px 50px -13px rgba(0,0,0,0.23);
-  border: solid thin #7e8a8599;
+  /* box-shadow: 0px 12px 50px -13px rgba(0,0,0,0.23); */
+  /* border: solid thin #7e8a8599; */
   border-radius: 2.5px;
   cursor: default;
   overflow: auto;
