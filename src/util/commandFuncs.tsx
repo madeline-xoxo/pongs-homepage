@@ -71,18 +71,13 @@ createCommand('cd', (command, terminal, write) => {
     files.find(file => {
         console.log(file)
         if (file.name === dir) {
-            if (file.openCurrent) window.location.href = file.url;
-            else window.open(file.url);
+            write(`${dir}: not a directory`, terminal, true, command[0])
             found = true;
             return true;
         }
     })
-    if (found) {
-        return true;
-    } else {
-        write(`${dir}: no such file or directory`, terminal, true, command[0])
-        return false;
-    }
+    if (!found) write(`${dir}: no such file or directory`, terminal, true, command[0])
+    return false;
 })
 
 createCommand('echo', (command, terminal, write) => {
