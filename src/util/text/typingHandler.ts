@@ -1,4 +1,5 @@
 import { execute, newLine } from "../command/commandHandler";
+import { autoComplete } from "./autoCompleter";
 import { parse } from "./syntaxHandler";
 
 interface File {
@@ -59,6 +60,9 @@ function modifierKeyHandler(key: string, text: string): string {
 		execute(text);
 		newLine();
 		return "";
+	}
+	case "Tab": {
+		return autoComplete(text);
 	}
 	default: {
 		return text;
