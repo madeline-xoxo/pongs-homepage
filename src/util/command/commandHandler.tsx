@@ -5,7 +5,7 @@ export class Command {
 	callback: (args: string[]) => void | boolean;
 	constructor(name: string, callback: (args: string[]) => void | boolean) {
 		this.name = name;
-		this.callback = callback;
+		this.callback = callback.bind(this);
 		commands.push(this);
 	}
 }
@@ -18,10 +18,10 @@ export function newLine() {
 export function execute(text: string) {
 	const parsed = text.replace("./", "./ ").split(" ");
 	const terminal = document.getElementById("terminal");
-	commands.find(command => {
-		if (command.name === parsed[0]) {
-			command.callback(parsed.slice(1));
-			return;
-		}
-	});
+	const command = commands.find(cmd => cmd.name === parsed[0]);
+	if (command) {
+		command.callback(parsed.slice(1).filter(a => a !== "" && a !== " "));
+		return;
+	}
+	terminal?.append(`mash: ${parsed[0]}: command not found`);
 }

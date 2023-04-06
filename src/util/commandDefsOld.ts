@@ -25,46 +25,6 @@
 // 	}
 // }
 
-// export const files = [
-// 	{
-// 		name: "auditionjs",
-// 		url: "https://b0ss.net/meme/auditionjs",
-// 		permissions: "lrwxr-xr-x",
-// 		owner: "root",
-// 		size: 16
-// 	},
-// 	{
-// 		name: "email",
-// 		url: "mailto:qj@b0ss.net",
-// 		openCurrent: true,
-// 		permissions: "lrwxr-xr-x",
-// 		owner: "root",
-// 		size: 62
-// 	},
-// 	{
-// 		name: "old_homework",
-// 		url: "https://m4th.b0ss.net",
-// 		permissions: "lrwxr-xr-x",
-// 		owner: "root",
-// 		size: 13
-// 	},
-// 	{
-// 		name: "homework",
-// 		url: "https://m5th.b0ss.net",
-// 		permissions: "lrwxr-xr-x",
-// 		owner: "root",
-// 		size: 13
-// 	},
-// 	{
-// 		name: "rice",
-// 		url: "https://b0ss.net/rice",
-// 		openCurrent: true,
-// 		permissions: "lrwxr-xr-x",
-// 		owner: "root",
-// 		size: 764
-// 	}
-// ] as File[];
-
 // export function createCommand(name: string, func: (args: string[], terminal: HTMLElement, write: (text: any, terminal: HTMLElement, failure: boolean, name: string) => void) => boolean) {
 // 	commands.push({
 // 		name: name,
