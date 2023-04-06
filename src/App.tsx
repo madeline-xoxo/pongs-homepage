@@ -190,6 +190,7 @@ function App() {
             neofetch.append(img);
             neofetch.append(`browser: ${browser}\ni don't know what else to put here`)
             terminal.append(neofetch);
+            terminal.scrollTop = terminal.scrollHeight;
             break;
           }
           default: {
