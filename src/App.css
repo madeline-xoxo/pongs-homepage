@@ -17,7 +17,7 @@
   box-sizing: border-box;
   padding: 3vw;
   z-index: 2;
-  /* box-shadow: 0px 12px 50px -13px rgba(0,0,0,0.23); */
+  box-shadow: 0px 12px 50px -13px rgba(0,0,0,0.23);
   border-radius: 5px;
 }
 
@@ -35,7 +35,7 @@
   line-break: anywhere;
   word-break: break-all;
   /* box-shadow: 0px 12px 50px -13px rgba(0,0,0,0.23); */
-  /* border: solid thin #7e8a8599; */
+  border: solid thin #7e8a8599;
   border-radius: 2.5px;
   cursor: default;
   overflow: auto;
@@ -108,4 +108,11 @@
   width: 100px;
   height: 100px;
   padding: 15px;
+}
+
+.help {
+  max-height: 175px;
+  display: flex;
+  flex-direction: column;
+  flex-flow: column wrap;
 }
