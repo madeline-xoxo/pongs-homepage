@@ -156,6 +156,42 @@ function App() {
             terminal.append(parsed.slice(1, parsed.length).join(' '));
             break;
           }
+          case "neofetch": {
+            const agent = window.navigator.userAgent.toLowerCase();
+            const browser =
+              agent.indexOf('edge') > -1 ? 'edge'
+                : agent.indexOf('edg') > -1 ? 'chromium based edge'
+                : agent.indexOf('opr') > -1 ? 'opera'
+                : agent.indexOf('chrome') > -1 ? 'chrome'
+                : agent.indexOf('trident') > -1 ? 'ie'
+                : agent.indexOf('firefox') > -1 ? 'firefox'
+                : agent.indexOf('safari') > -1 ? 'safari'
+                : 'other';
+            const img = document.createElement('img')
+            img.src = (() => {
+              switch(browser) {
+                case "firefox": {
+                  return "https://upload.wikimedia.org/wikipedia/commons/a/a0/Firefox_logo%2C_2019.svg";
+                }
+                case "chrome": {
+                  return "https://upload.wikimedia.org/wikipedia/commons/e/e1/Google_Chrome_icon_%28February_2022%29.svg";
+                }
+                case "edge":
+                case "chromium based edge": {
+                  return "https://upload.wikimedia.org/wikipedia/commons/9/98/Microsoft_Edge_logo_%282019%29.svg";
+                }
+                default: {
+                  return "https://upload.wikimedia.org/wikipedia/commons/d/d2/Question_mark.svg";
+                }
+              }
+            })()
+            const neofetch = document.createElement('div');
+            neofetch.classList.add('neofetch');
+            neofetch.append(img);
+            neofetch.append(`browser: ${browser}\ni don't know what else to put here`)
+            terminal.append(neofetch);
+            break;
+          }
           default: {
             terminal.append(`mash: ${parsed[0]}: command not found`);
             break;
@@ -199,13 +235,14 @@ function App() {
   }, [handleInput])
   return (
     <div className="main">
-      <div className="frame">
+      <div id="frame">
         <div id="terminal">
           <div>
             welcome! available commands:<br />
             <div className="command">ls</div>
             <div className="command">echo</div>
             <div className="command">cd <span className="param">(limited)</span></div>
+            <div className="command">neofetch</div>
           </div>
           <div className="line">
             <span className="hostname">
