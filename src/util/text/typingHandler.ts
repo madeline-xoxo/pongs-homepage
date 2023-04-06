@@ -1,9 +1,5 @@
+import { execute, newLine } from "../command/commandHandler";
 import { parse } from "./syntaxHandler";
-
-function newLine() {
-    document.getElementById("input")!.id = "";
-    document.getElementById("terminal")!.innerHTML += "<div class=\"line\"><span class=\"hostname\">[madeline@b0ss.net <span class=\"directory\">~</span>]</span><span class=\"bash\">$ </span><span id=\"input\"><span class=\"command\"></span><span class=\"param\"></span></span></div>";
-}
 
 function modifierKeyHandler(key: string, text: string): string {
 	switch (key) {
@@ -11,6 +7,7 @@ function modifierKeyHandler(key: string, text: string): string {
 		return text.slice(0, text.length - 1);
 	}
 	case "Enter": {
+		execute(text);
 		newLine();
 		return "";
 	}
