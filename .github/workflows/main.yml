@@ -1,0 +1,30 @@
+name: Build and deploy
+
+on:
+  push:
+    branches:
+      - main # replace with the name of your branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.ACTION_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          allow_empty_commit: true
+          commit_message: "Deploy from GitHub Actions"
+          force_orphan: true
+          base_href: /pongs-homepage/
