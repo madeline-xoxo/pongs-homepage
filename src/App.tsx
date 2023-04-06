@@ -3,6 +3,7 @@ import React from "react";
 import "./util/command/commands";
 import "./App.css";
 import { type } from "./util/text/typingHandler";
+import { commands } from "./util/command/commandHandler";
 
 function App() {
 	const [date, setDate] = useState("");
@@ -12,9 +13,9 @@ function App() {
 	}, [type]);
 	useEffect(() => {
 		const localDate = localStorage.getItem("date");
-		const options = { 
-			year: "numeric", 
-			month: "2-digit", 
+		const options = {
+			year: "numeric",
+			month: "2-digit",
 			day: "2-digit",
 			hour: "2-digit",
 			minute: "2-digit",
@@ -36,19 +37,19 @@ function App() {
 				<div id="terminal">
 					<div>
 						{date !== "none" ? <div><span className='directory'>last login:</span> <span className='hostname'>{date}</span><br /></div> : null}
-            welcome! available commands:<br />
+						welcome! available commands:<br />
 						<div className="help">
-							{/* {
-                commands.map(command => {
-                  return !command.unlisted ? <div key={command.name} className="command">{command.name}</div> : null;
-                })
-              } */}
-              
+							{
+								commands.map(command => {
+									return !command.unlisted ? <div key={command.name} className="command">{command.name}</div> : null;
+								})
+							}
+
 						</div>
 					</div>
 					<div className="line">
 						<span className="hostname">
-              [madeline@b0ss.net <span className="directory">~</span>]
+							[madeline@b0ss.net <span className="directory">~</span>]
 						</span>
 						<span className="bash">$ </span>
 						<span id="input" />

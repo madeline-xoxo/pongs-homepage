@@ -50,4 +50,4 @@ new Command("./", function(this: Command, args) {
 		return;
 	}
 	file.openCurrent ? window.location.href = file.url : window.open(file.url);
-});
+}, true);

@@ -3,9 +3,11 @@ export const commands: Command[] = [];
 export class Command {
 	name: string;
 	callback: (args: string[]) => void | boolean;
-	constructor(name: string, callback: (args: string[]) => void | boolean) {
+	unlisted?: boolean;
+	constructor(name: string, callback: (args: string[]) => void | boolean, unlisted?: boolean) {
 		this.name = name;
 		this.callback = callback.bind(this);
+		this.unlisted = unlisted;
 		commands.push(this);
 	}
 }
