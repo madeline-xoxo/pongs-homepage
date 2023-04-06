@@ -114,6 +114,7 @@ function App() {
               terminal.append(filesString);
               break;
             } else {
+              if (parsed.slice(-1)[0].trim() === "") break;
               const directory = files.filter(file => file.name === parsed.slice(-1)[0])[0];
               if (!directory) {
                 terminal.append(`mash: ls: cannot access '${parsed.slice(-1)[0]}': no such file or directory`)
@@ -126,6 +127,9 @@ function App() {
           case "cd": {
             if (parsed.slice(-1)[0].trim() === "cd") break;
             switch (parsed.slice(-1)[0]) {
+              case "": {
+                break;
+              }
               case ".":
               case "./": {
                 terminal.append(`mash: cd: you're already in the current directory, dumbass`)
