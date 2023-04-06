@@ -3,7 +3,10 @@ import { files } from "./typingHandler";
 
 export function autoComplete(text: string): string {
 	const tokens = text.split(" ");
-	const predictions = files.filter(file => file.name.startsWith(tokens.slice(-1)[0]));
+	const tokenWeCareAbout = tokens.slice(-1)[0];
+	const predictions = files.filter(file => file.name.startsWith(tokenWeCareAbout.replace("./", "")));
+	//                                                            ^^ for the initial finding process, we
+	//                                                            need to remove this, but we need it later.
 	switch (predictions.length) {
 	case 0: {
 		console.log(0);
@@ -12,7 +15,7 @@ export function autoComplete(text: string): string {
 	case 1: {
 		console.log(1);
 		tokens.pop();
-		tokens.push(predictions[0].name);
+		tokens.push(tokenWeCareAbout.startsWith("./") ? `./${predictions[0].name}` : predictions[0].name);
 		return tokens.join(" ");
 	}
 	default: {
