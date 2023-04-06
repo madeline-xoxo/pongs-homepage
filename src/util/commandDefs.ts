@@ -2,7 +2,7 @@
 export const commands: Command[] = [];
 
 export interface Command {
-    function: (command: string[], terminal: HTMLElement, write: (text: string, terminal: HTMLElement, failure: boolean, name: string) => void) => boolean;
+    function: (command: string[], terminal: HTMLElement, write: (text: any, terminal: HTMLElement, failure: boolean, name: string) => void) => boolean;
     name: string;
 }
 
@@ -15,7 +15,7 @@ export interface File {
     size: number;
     date: string;
 }
-export function write(text: string, terminal: HTMLElement, failure: boolean, name: string) {
+export function write(text: any, terminal: HTMLElement, failure: boolean, name: string) {
     if (failure) {
         terminal.append(`${name}: ${text}`)
     } else {
@@ -63,7 +63,7 @@ export const files = [
     }
 ] as File[];
 
-export function createCommand(name: string, func: (args: string[], terminal: HTMLElement, write: (text: string, terminal: HTMLElement, failure: boolean, name: string) => void) => boolean) {
+export function createCommand(name: string, func: (args: string[], terminal: HTMLElement, write: (text: any, terminal: HTMLElement, failure: boolean, name: string) => void) => boolean) {
     commands.push({
         name: name,
         function: func,
