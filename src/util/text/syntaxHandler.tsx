@@ -1,5 +1,7 @@
 import { jsxToHtmlElement } from "../jsx/conversion";
 import React from "react";
+import { commands } from "../command/commandHandler";
+import { files } from "./typingHandler";
 interface IToken {
 	class: "quotes" | "command" | "params",
 	content: string,
@@ -46,6 +48,24 @@ export function parse(text: string) {
 		}
 	}
 	const parsedItems = [] as Node[];
-	val.forEach(item => parsedItems.push(jsxToHtmlElement(<span className={item.class}>{item.content}</span>)));
+	val.forEach(item => parsedItems.push(jsxToHtmlElement(<span className={((): "quotes" | "command" | "params" => {
+		if (item.class === "command") {
+			// sorry for bad if statement.
+			// we're checking if:
+			//	a. the command exists
+			//         or
+			//	b. the command starts with 
+			//     ./ and the file exists
+			// 
+			// and that the command isn't unlisted. 
+			if ((commands.find(command => command.name.trim() === item.content.trim()) || (item.content.startsWith("./") && files.find(file => file.name === item.content.replace("./", "").trim()))) && !(commands.find(command => command.name === item.content.trim())?.unlisted)) {
+				return "command";
+			} else {
+				return "params";
+			}
+		} else {
+			return item.class;
+		}
+	})()}>{item.content}</span>)));
 	return parsedItems;
 }
