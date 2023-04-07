@@ -12,9 +12,14 @@ export class Command {
 	}
 }
 
-export function newLine() {
-    document.getElementById("input")!.id = "";
-    document.getElementById("terminal")!.innerHTML += "<div class=\"line\"><span class=\"hostname\">[madeline@b0ss.net <span class=\"directory\">~</span>]</span><span class=\"bash\">$ </span><span id=\"input\"><span class=\"command\"></span><span class=\"param\"></span></span></div>";
+export function newLine(dontClear?: boolean) {
+	const input = document.getElementById("input")!;
+	const terminal = document.getElementById("terminal")!;
+	input.id = "";
+	terminal.innerHTML += "<div class=\"line\"><span class=\"hostname\">[madeline@b0ss.net <span class=\"directory\">~</span>]</span><span class=\"bash\">$ </span><span id=\"input\"><span class=\"command\"></span><span class=\"param\"></span></span></div>";
+	if (dontClear) {
+		document.getElementById("input")!.innerText = input.innerText;
+	}
 }
 
 export function execute(text: string) {
