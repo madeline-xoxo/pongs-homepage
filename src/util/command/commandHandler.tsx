@@ -23,7 +23,7 @@ export function newLine(dontClear?: boolean) {
 }
 
 export function execute(text: string) {
-	const parsed = text.replace("./", "./ ").split(" ");
+	const parsed = text.trim().replace("./", "./ ").split(" ");
 	const terminal = document.getElementById("terminal");
 	const command = commands.find(cmd => cmd.name === parsed[0]);
 	if (command) {

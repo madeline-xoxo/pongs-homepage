@@ -1,10 +1,22 @@
 //   hii!! basics:
 // - args includes everything split by " ", excluding the command itself. length === 0 if no args are provided.
 // - treat terminal.append() as console.log() for the shell. you can append html elements as Nodes.
-// - have fun!
-
+// - the constructor is as follows:
+//     new Command("base", function (this: Command, args) { const terminal = document.getElementById("terminal"); terminal?.append("hello, world!") }, true);
+//                   ^                ^                ^                                                                  ^       ^                     ^
+//                   |                |                 \                                                                 |        \            this makes the command           
+//        the command name    use this for command name |                                                           you can also use\          unlisted, useful for the 
+//                                            all arguments (including                                              a non-null asser-\           help command and tab
+//                                            non-dash) in a string[],                                              tion here, but i  \       
+//                                            excluding command name.                                               prefer optional    terminal.append() can be used
+// - have fun!                                                                                                          chaining.      for a raw string to be appended,
+//                                                                                                                                     or you can use it in conjunction
+//                                                                                                                                     with jsx and jsxToHtmlElement()
+//                                                                                                                                     (see src/util/jsx/conversion.tsx)
+import { jsxToHtmlElement } from "../jsx/conversion";
 import { files } from "../text/typingHandler";
-import { Command, commands } from "./commandHandler";
+import { Command, commands, newLine } from "./commandHandler";
+import React from "react";
 
 commands.length = 0; // fixes double runs on vite dev
 //                      reload
@@ -130,3 +142,26 @@ new Command("./", function (this: Command, args) {
 	}
 	file.openCurrent ? window.location.href = file.url : window.open(file.url);
 }, true);
+
+new Command("", function (this: Command) {
+	return;
+}, true);
+
+new Command("help", function (this: Command, args) {
+	const terminal = document.getElementById("terminal");
+	const dashedArgs = args.filter(arg => arg.startsWith("-"));
+	if (dashedArgs.length > 0) {
+		terminal?.append(`${this.name}: unrecognised option -- '${dashedArgs[0].replace("-", "")}'`);
+		return;
+	}
+	terminal?.append(jsxToHtmlElement((
+		<div className="help">
+			{
+				commands.map(command => {
+					return !command.unlisted ? <div key={command.name} className="command">{command.name}</div> : null;
+				})
+			}
+
+		</div>
+	)));
+}); 
