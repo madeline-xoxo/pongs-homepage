@@ -49,7 +49,7 @@ function App() {
 					</div>
 					<div className="line">
 						<span className="hostname">
-							[madeline@b0ss.net <span className="directory">~</span>]
+							[robot@b0ss.net <span className="directory">~</span>]
 						</span>
 						<span className="bash">$ </span>
 						<span id="input" />

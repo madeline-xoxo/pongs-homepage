@@ -16,7 +16,7 @@ export function newLine(dontClear?: boolean) {
 	const input = document.getElementById("input")!;
 	const terminal = document.getElementById("terminal")!;
 	input.id = "";
-	terminal.innerHTML += "<div class=\"line\"><span class=\"hostname\">[madeline@b0ss.net <span class=\"directory\">~</span>]</span><span class=\"bash\">$ </span><span id=\"input\"><span class=\"command\"></span><span class=\"param\"></span></span></div>";
+	terminal.innerHTML += "<div class=\"line\"><span class=\"hostname\">[robot@b0ss.net <span class=\"directory\">~</span>]</span><span class=\"bash\">$ </span><span id=\"input\"><span class=\"command\"></span><span class=\"param\"></span></span></div>";
 	if (dontClear) {
 		document.getElementById("input")!.innerText = input.innerText;
 	}

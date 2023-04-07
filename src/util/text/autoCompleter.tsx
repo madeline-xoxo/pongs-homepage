@@ -34,7 +34,7 @@ export function autoComplete(text: string): string {
 		const terminal = document.getElementById("terminal");
 		const predictions = [] as string[];
 		files.forEach(file => predictions.push(file.name));
-		commands.forEach(command => !command.unlisted ? predictions.push(command.name) : null);
+		if (!tokenWeCareAbout.startsWith("./")) commands.forEach(command => !command.unlisted ? predictions.push(command.name) : null);
 		predictions.sort();
 		predictions.forEach(prediction => {
 			terminal?.append(jsxToHtmlElement(<span className={commands.find(command => command.name === prediction) ? "command" : "param"}>{prediction}   </span>));
