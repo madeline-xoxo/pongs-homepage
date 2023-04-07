@@ -2,6 +2,7 @@ import { commands, newLine } from "../command/commandHandler";
 import { jsxToHtmlElement } from "../jsx/conversion";
 import { files } from "./typingHandler";
 import React from "react";
+import { getCommand } from "../command/commandUtils";
 
 interface Prediction {
 	name: string;
@@ -27,10 +28,9 @@ export function autoComplete(text: string): string {
 	case 1: {
 		tokens.pop();
 		tokens.push(tokenWeCareAbout.startsWith("./") ? `./${predictions[0].name}` : predictions[0].name);
-		return tokens.join(" ");
+		return predictions[0].type === "command" ? `${predictions[0].name} ` : `./${predictions[0].name} `;
 	}
-	default: {
-		// commands.find(command => command.name === "ls")!.callback([]);
+	case files.length + commands.length: {
 		const terminal = document.getElementById("terminal");
 		const predictions = [] as string[];
 		files.forEach(file => predictions.push(file.name));
@@ -38,6 +38,15 @@ export function autoComplete(text: string): string {
 		predictions.sort();
 		predictions.forEach(prediction => {
 			terminal?.append(jsxToHtmlElement(<span className={commands.find(command => command.name === prediction) ? "command" : "param"}>{prediction}   </span>));
+		});
+		newLine(true);
+		return text;
+	}
+	default: {
+		const terminal = document.getElementById("terminal");
+		predictions.forEach(prediction => {
+			if (prediction.type === "command" && getCommand(prediction.name, true)?.unlisted) return;
+			terminal?.append(jsxToHtmlElement(<span className={commands.find(command => command.name === prediction.name) ? "command" : "param"}>{prediction.name}   </span>));
 		});
 		newLine(true);
 		return text;

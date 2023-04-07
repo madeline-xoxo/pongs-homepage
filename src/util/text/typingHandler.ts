@@ -1,4 +1,5 @@
 import { execute, newLine } from "../command/commandHandler";
+import { getCommand } from "../command/commandUtils";
 import { autoComplete } from "./autoCompleter";
 import { parse } from "./syntaxHandler";
 
@@ -58,7 +59,7 @@ function modifierKeyHandler(key: string, text: string): string {
 	}
 	case "Enter": {
 		execute(text);
-		newLine();
+		!getCommand(text.trim().replace("./", "./ ").split(" ")[0])?.dontNewline ? newLine() : null;
 		return "";
 	}
 	case "Tab": {

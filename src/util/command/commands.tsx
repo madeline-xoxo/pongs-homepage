@@ -165,3 +165,14 @@ new Command("help", function (this: Command, args) {
 		</div>
 	)));
 }); 
+
+new Command("clear", function (this: Command, args) {
+	const terminal = document.getElementById("terminal");
+	const dashedArgs = args.filter(arg => arg.startsWith("-"));
+	if (dashedArgs.length > 0) {
+		terminal?.append(`${this.name}: unrecognised option -- '${dashedArgs[0].replace("-", "")}'`);
+		return;
+	}
+	terminal!.innerHTML = "<div class=\"line\"><span class=\"hostname\">[robot@b0ss.net <span class=\"directory\">~</span>]</span><span class=\"bash\">$ </span><span id=\"input\"><span class=\"command\"></span><span class=\"param\"></span></span></div>";
+	return;
+}, false, true);
