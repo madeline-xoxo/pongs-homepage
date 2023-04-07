@@ -1,3 +1,5 @@
+import { parse } from "../text/syntaxHandler";
+
 export const commands: Command[] = [];
 
 export class Command {
@@ -20,7 +22,7 @@ export function newLine(dontClear?: boolean, overrideIdChange?: boolean) {
 	if (!overrideIdChange) input.id = "";
 	terminal.innerHTML += "<div class=\"line\"><span class=\"hostname\">[robot@b0ss.net <span class=\"directory\">~</span>]</span><span class=\"bash\">$ </span><span id=\"input\"><span class=\"command\"></span><span class=\"param\"></span></span></div>";
 	if (dontClear) {
-		document.getElementById("input")!.innerText = input.innerText;
+		parse(input.innerText).forEach(token => document.getElementById("input")!.append(token));
 	}
 }
 

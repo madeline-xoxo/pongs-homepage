@@ -28,7 +28,7 @@ export function autoComplete(text: string): string {
 	case 1: {
 		tokens.pop();
 		tokens.push(tokenWeCareAbout.startsWith("./") ? `./${predictions[0].name}` : predictions[0].name);
-		return predictions[0].type === "command" ? `${predictions[0].name} ` : `./${predictions[0].name} `;
+		return `${tokens.join(" ")} `;
 	}
 	case files.length + commands.length: {
 		const terminal = document.getElementById("terminal");
