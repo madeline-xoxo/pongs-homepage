@@ -49,7 +49,7 @@ export function parse(text: string) {
 			  }
 			  constructedString = "";
 				}
-				if (char === "{" || char === "}") {
+				if (char === "{" || char === "}" && !currentlyInString) {
 			  val.push({
 						class: "hostname",
 						content: char,
