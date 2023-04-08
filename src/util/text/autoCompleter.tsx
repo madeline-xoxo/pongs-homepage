@@ -16,11 +16,10 @@ export function autoComplete(text: string): string {
 	//                                                            ^^ for the initial finding process, we
 	//                                                            need to remove this, but we need it later.
 	const predictions: Prediction[] = (() => {
-		const raw: Prediction[] = (files.filter(file => file.name.startsWith(tokenWeCareAbout.replace("./", "")))  as Prediction[]).concat(commands.filter(command => command.name.startsWith(tokenWeCareAbout)) as Prediction[]);
-		raw.forEach(raw => raw.type = commands.find(cmd => cmd.name === raw.name) ? "command": "file");
+		const raw: Prediction[] = (files.filter(file => file.name.startsWith(tokenWeCareAbout.replace("./", "")))  as Prediction[]).concat(commands.filter(command => !command.unlisted && command.name.startsWith(tokenWeCareAbout)) as Prediction[]);
+		raw.forEach(raw => raw.type = getCommand(raw.name) ? "command": "file");
 		return raw;
 	})();
-	console.log(predictions);
 	switch (predictions.length) {
 	case 0: {
 		return text;
@@ -37,7 +36,7 @@ export function autoComplete(text: string): string {
 		if (!tokenWeCareAbout.startsWith("./")) commands.forEach(command => !command.unlisted ? predictions.push(command.name) : null);
 		predictions.sort();
 		predictions.forEach(prediction => {
-			terminal?.append(jsxToHtmlElement(<span className={commands.find(command => command.name === prediction) ? "command" : "param"}>{prediction}   </span>));
+			terminal?.append(jsxToHtmlElement(<span className={getCommand(prediction) ? "command" : "param"}>{prediction}   </span>));
 		});
 		newLine(true);
 		return text;
@@ -46,7 +45,7 @@ export function autoComplete(text: string): string {
 		const terminal = document.getElementById("terminal");
 		predictions.forEach(prediction => {
 			if (prediction.type === "command" && getCommand(prediction.name, true)?.unlisted) return;
-			terminal?.append(jsxToHtmlElement(<span className={commands.find(command => command.name === prediction.name) ? "command" : "param"}>{prediction.name}   </span>));
+			terminal?.append(jsxToHtmlElement(<span className={getCommand(prediction.name) ? "command" : "param"}>{prediction.name}   </span>));
 		});
 		newLine(true);
 		return text;

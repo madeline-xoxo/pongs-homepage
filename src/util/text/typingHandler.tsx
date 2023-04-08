@@ -1,8 +1,10 @@
 import { execute, newLine } from "../command/commandHandler";
 import { getCommand } from "../command/commandUtils";
+import { jsxToHtmlElement } from "../jsx/conversion";
 import { autoComplete } from "./autoCompleter";
 import { handleControl } from "./controlHandling";
 import { parse } from "./syntaxHandler";
+import React from "react";
 
 interface File {
 	name: string;
@@ -89,8 +91,9 @@ export function type(e: KeyboardEvent) {
 		text += e.key;
 	}
 	const tokens = parse(text);
+	console.log(tokens);
 	input.innerHTML = ""; // kind of bad
-	tokens.forEach(token => input.append(token));
+	tokens.forEach(token => input.append(jsxToHtmlElement(<span className={token.type}>{token.content}</span>)));
 	const terminal = document.getElementById("terminal")!;
 	terminal.scrollTop = terminal.scrollHeight;
 }

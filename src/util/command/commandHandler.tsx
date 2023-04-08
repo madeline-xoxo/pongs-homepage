@@ -1,4 +1,5 @@
 import { parse } from "../text/syntaxHandler";
+import { getCommand } from "./commandUtils";
 
 export const commands: Command[] = [];
 
@@ -22,14 +23,14 @@ export function newLine(dontClear?: boolean, overrideIdChange?: boolean) {
 	if (!overrideIdChange) input.id = "";
 	terminal.innerHTML += "<div class=\"line\"><span class=\"hostname\">[robot@b0ss.net <span class=\"directory\">~</span>]</span><span class=\"bash\">$ </span><span id=\"input\"><span class=\"command\"></span><span class=\"param\"></span></span></div>";
 	if (dontClear) {
-		parse(input.innerText).forEach(token => document.getElementById("input")!.append(token));
+		parse(input.innerText).forEach(token => document.getElementById("input")!.append(token.content));
 	}
 }
 
 export function execute(text: string) {
 	const parsed = text.trim().replace("./", "./ ").split(" ");
 	const terminal = document.getElementById("terminal");
-	const command = commands.find(cmd => cmd.name === parsed[0]);
+	const command = getCommand(parsed[0]);
 	if (command) {
 		command.callback(parsed.slice(1).filter(a => a !== "" && a !== " "));
 		return;
