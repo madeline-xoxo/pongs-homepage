@@ -1,6 +1,7 @@
 import { execute, newLine } from "../command/commandHandler";
 import { getCommand } from "../command/commandUtils";
 import { autoComplete } from "./autoCompleter";
+import { handleControl } from "./controlHandling";
 import { parse } from "./syntaxHandler";
 
 interface File {
@@ -82,6 +83,8 @@ export function type(e: KeyboardEvent) {
 	let text = input.innerText;
 	if (!shouldType(e.key)) {
 		text = modifierKeyHandler(e.key, text);
+	} else if (e.ctrlKey) {
+		handleControl(e.key);
 	} else {
 		text += e.key;
 	}

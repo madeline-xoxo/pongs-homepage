@@ -56,7 +56,7 @@ export function parse(text: string) {
 			  });
 				}
 		  }
-		  // Add a space token if this isn't the last argument
+		  // add a space token if this isn't the last argument
 		  if (i < args.length - 1) {
 				val.push({
 			  class: "params",
