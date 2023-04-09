@@ -1,4 +1,4 @@
-import { getCommand } from "../command/commandUtils";
+import { getCommand, getFile } from "../command/commandUtils";
 import { Lexer, Token } from "./lexer";
 
 class CommandLexer extends Lexer {
@@ -10,8 +10,7 @@ class CommandLexer extends Lexer {
 	};
 	callbacks = {
 		command: (match: string): boolean => {
-			const command = getCommand(match.trim());
-			if (command) {
+			if (getFile(match.trim().replace("./", "")) || getCommand(match.trim())) {
 				return true;
 			}
 			return false;
