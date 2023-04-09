@@ -3,11 +3,11 @@ import { Lexer, Token } from "./lexer";
 
 class CommandLexer extends Lexer {
 	exps = {
-		spaces: / +/g,
-		command: /^[^ ]+/g,
 		quotes: /"[^"\s]*"/g,
-		param: /(?<= ).*/g,
-	  };
+		command: /^[^ ]+/g,
+		spaces: /\s/g,
+		param: /(?:\s)(.*)/g,
+	};
 	callbacks = {
 		command: (match: string): boolean => {
 			const command = getCommand(match.trim());

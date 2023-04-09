@@ -45,42 +45,104 @@ export class Lexer {
 			let matched = false;
 			for (const key of expKeys) {
 				const exp = this.exps[key];
-				exp.lastIndex = pos;
-				const match = exp.exec(this.text);
-				if (match && match.index === pos) {
-					if (this.callbacks[getKeyByValue(this.exps, exp)!]) {
-						if (this.callbacks[getKeyByValue(this.exps, exp)!](match[0])) {
-							tokens.push({
-								content: match[0],
-								type: key,
-								start: match.index,
-								end: match.index + match[0].length,
-							});
+				let match;
+				while ((match = exp.exec(this.text.slice(pos))) !== null) {
+					if (match.index === 0) {
+						const callback = (() => {
+							const callbacks = Object.entries(this.callbacks);
+							const exps = Object.entries(this.exps).find(currentExp => currentExp[1] === exp)!;
+							const callback = callbacks.find(callback => callback[0] === exps[0]);
+							return callback || undefined;
+						})();
+
+						const tokenContent = match[0];
+						const tokenStart = pos;
+						const tokenEnd = pos + tokenContent.length;
+						const tokenType = key;
+
+						if (callback) {
+							if (callback[1].call(this, tokenContent)) {
+								tokens.push({
+									content: tokenContent,
+									type: tokenType,
+									start: tokenStart,
+									end: tokenEnd,
+								});
+							} else {
+								tokens.push({
+									content: tokenContent,
+									type: this.fallback,
+									start: tokenStart,
+									end: tokenEnd,
+								});
+							}
 						} else {
-							tokens.push({
-								content: match[0],
-								type: this.fallback,
-								start: match.index,
-								end: match.index + match[0].length,
-							});
+							if (key === "param") {
+								let paramPos = 0;
+								while (paramPos < tokenContent.length) {
+									let paramMatched = false;
+									for (const paramKey of expKeys) {
+										if (paramKey === "param") {
+											continue;
+										}
+
+										const paramExp = this.exps[paramKey];
+										let paramMatch;
+										while ((paramMatch = paramExp.exec(tokenContent.slice(paramPos))) !== null) {
+											if (paramMatch.index === 0) {
+												tokens.push({
+													content: paramMatch[0],
+													type: paramKey === "command" ? "param" : paramKey,
+													start: tokenStart + paramPos,
+													end: tokenStart + paramPos + paramMatch[0].length,
+												});
+												paramPos += paramMatch[0].length;
+												paramMatched = true;
+												break;
+											}
+										}
+
+										if (paramMatched) {
+											break;
+										}
+									}
+
+									if (!paramMatched) {
+										tokens.push({
+											content: tokenContent.charAt(paramPos),
+											type: tokenType,
+											start: tokenStart + paramPos,
+											end: tokenStart + paramPos + 1,
+										});
+										paramPos++;
+									}
+								}
+							} else {
+								tokens.push({
+									content: tokenContent,
+									type: tokenType,
+									start: tokenStart,
+									end: tokenEnd,
+								});
+							}
 						}
-					} else {
-						tokens.push({
-							content: match[0],
-							type: key,
-							start: match.index,
-							end: match.index + match[0].length,
-						});
+
+						pos += tokenContent.length;
+						matched = true;
+						break;
 					}
-					pos += match[0].length;
-					matched = true;
+				}
+
+				if (matched) {
 					break;
 				}
 			}
+
 			if (!matched) {
-				throw new Error(`Invalid input at position ${pos}: "${this.text.slice(pos)}"`);
+				throw new LexerError(`Invalid input at position ${pos}: "${this.text.slice(pos)}"`);
 			}
 		}
+
 		return tokens;
 	}
 	constructor(text: string) {
