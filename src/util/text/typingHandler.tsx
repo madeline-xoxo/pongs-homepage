@@ -8,74 +8,80 @@ import React from "react";
 
 interface File {
 	name: string;
-	url: string;
+	exec: (args: string[]) => void;
 	permissions: string;
 	owner: string;
 	size: number;
-	openCurrent?: boolean;
 }
 
 export const files = [
+	// {
+	//     name: "about-me",
+	//     url: ""
+	// },
 	{
-		name: "auditionjs",
-		url: "https://b0ss.net/meme/auditionjs",
+		name: "about-me",
+		exec: (args) => {
+			const terminal = document.getElementById("terminal");
+			terminal?.append(
+				"hi, i'm maddie! i like to code and play counter-strike. my steam friend code is 1528178484 if you wanna play something sometime.\noh yeah, also my pronouns are she/her but i really don't care what \nyou call me."
+			);
+		},
 		permissions: "lrwxr-xr-x",
-		owner: "root",
-		size: 16
+		owner: "maddie",
 	},
 	{
-		name: "email",
-		url: "mailto:qj@b0ss.net",
-		openCurrent: true,
+		name: "contact-me",
+		exec: (args) => {
+			const terminal = document.getElementById("terminal");
+			window.open("mailto:maddie@moondust.dev");
+		},
 		permissions: "lrwxr-xr-x",
-		owner: "root",
-		size: 62
+		owner: "maddie",
+		size: 1853,
 	},
-	{
-		name: "old_homework",
-		url: "https://m4th.b0ss.net",
-		permissions: "lrwxr-xr-x",
-		owner: "root",
-		size: 13
-	},
-	{
-		name: "homework",
-		url: "https://m5th.b0ss.net",
-		permissions: "lrwxr-xr-x",
-		owner: "root",
-		size: 13
-	},
-	{
-		name: "rice",
-		url: "https://b0ss.net/rice",
-		openCurrent: true,
-		permissions: "lrwxr-xr-x",
-		owner: "root",
-		size: 764
-	}
 ] as File[];
+
+const inputtedCommands = [] as string[];
+let historyNumber = 0;
 
 function modifierKeyHandler(key: string, text: string): string {
 	switch (key) {
-	case "Backspace": {
-		return text.slice(0, text.length - 1);
-	}
-	case "Enter": {
-		execute(text);
-		!getCommand(text.trim().replace("./", "./ ").split(" ")[0])?.dontNewline ? newLine() : null;
-		return "";
-	}
-	case "Tab": {
-		return autoComplete(text);
-	}
-	default: {
-		return text;
-	}
+		case "Backspace": {
+			return text.slice(0, text.length - 1);
+		}
+		case "Enter": {
+			execute(text);
+			!getCommand(text.trim().replace("./", "./ ").split(" ")[0])?.dontNewline
+				? newLine()
+				: null;
+			if (text !== "") inputtedCommands.push(text);
+			historyNumber = inputtedCommands.length;
+			return "";
+		}
+		case "Tab": {
+			return autoComplete(text);
+		}
+		case "ArrowUp": {
+			if (historyNumber === 0) return text;
+			historyNumber--;
+			return inputtedCommands[historyNumber];
+		}
+		case "ArrowDown": {
+			if (historyNumber === inputtedCommands.length) return text;
+			historyNumber++;
+			return inputtedCommands[historyNumber] || "";
+		}
+		default: {
+			return text;
+		}
 	}
 }
 
 function shouldType(key: string): boolean {
-	return [...Array(95).keys()].map(i => String.fromCharCode(i + 32)).includes(key);
+	return [...Array(95).keys()]
+		.map((i) => String.fromCharCode(i + 32))
+		.includes(key);
 	// ^ see https://stackoverflow.com/a/71085063
 }
 
@@ -93,7 +99,11 @@ export function type(e: KeyboardEvent) {
 	const tokens = parse(text);
 	console.log(tokens);
 	input.innerHTML = ""; // kind of bad
-	tokens.forEach(token => input.append(jsxToHtmlElement(<span className={token.type}>{token.content}</span>)));
+	tokens.forEach((token) =>
+		input.append(
+			jsxToHtmlElement(<span className={token.type}>{token.content}</span>)
+		)
+	);
 	const terminal = document.getElementById("terminal")!;
 	terminal.scrollTop = terminal.scrollHeight;
 }
