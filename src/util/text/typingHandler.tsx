@@ -24,7 +24,7 @@ export const files = [
 		exec: (args) => {
 			const terminal = document.getElementById("terminal");
 			terminal?.append(
-				"hi, i'm maddie! i like to code and play counter-strike. my steam friend code is 1528178484 if you wanna play something sometime.\noh yeah, also my pronouns are she/her but i really don't care what \nyou call me."
+				"hi! i'm maddie, a 14 year old developer from the uk. i like to code in typescript, and i'm currently learning rust. i like to play csgo in my free time. i love tv girl!! <3"
 			);
 		},
 		permissions: "lrwxr-xr-x",
