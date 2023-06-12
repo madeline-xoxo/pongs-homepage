@@ -48,6 +48,10 @@
     display: none;
 }
 
+.symbol {
+    color: #5f9cfe
+}
+
 .hostname {
     color: #b78c07;
 }

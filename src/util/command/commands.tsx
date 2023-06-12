@@ -1,3 +1,5 @@
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable quotes */
 //   hii!! basics:
 // - args includes everything split by " ", excluding the command itself. length === 0 if no args are provided.
 // - treat terminal.append() as console.log() for the shell. you can append html elements as Nodes.
@@ -16,6 +18,7 @@
 import { jsxToHtmlElement } from "../jsx/conversion";
 import { files } from "../text/typingHandler";
 import { Command, commands, newLine } from "./commandHandler";
+import { getFile } from "./commandUtils";
 
 commands.length = 0; // fixes double runs on vite dev
 //                      reload
@@ -215,6 +218,35 @@ new Command("help", function (this: Command, args) {
 	);
 });
 
+new Command(
+	"cat",
+	function (this: Command, args) {
+		const terminal = document.getElementById("terminal");
+		const dashedArgs = args.filter((arg) => arg.startsWith("-"));
+		if (dashedArgs.length > 0) {
+			terminal?.append(
+				`${this.name}: unrecognised option -- '${dashedArgs[0].replace(
+					"-",
+					""
+				)}'`
+			);
+			return;
+		}
+		const file = getFile(args.at(-1)!);
+		if (!file) return terminal?.append(`${this.name}: not found -- ${args[0]}`);
+		terminal?.append(`\n${file.exec.toString()}\n`);
+	},
+	true
+);
+
+new Command(
+	"eval",
+	function (this: Command, args) {
+		const terminal = document.getElementById("terminal");
+		terminal?.append(eval(args.join(" ")) || "");
+	},
+	true
+);
 new Command(
 	"clear",
 	function (this: Command, args) {

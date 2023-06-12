@@ -64,9 +64,6 @@ function App() {
 					</div>
 				</div>
 			</div>
-			<div id="footer">
-				{`(just so we're all clear here, mash is a portmanteau of "madeline" and "bash".)`}
-			</div>
 		</div>
 	);
 }
