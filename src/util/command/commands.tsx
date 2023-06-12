@@ -230,7 +230,7 @@ new Command(
 			return;
 		}
 		terminal!.innerHTML =
-			'<div class="line"><span class="hostname">[maddie@moondust.dev <span class="directory">~</span>]</span><span class="bash">$ </span><span id="input"><span class="command"></span><span class="param"></span></span></div>';
+			'<div class="line"><span class="hostname">[nptr@moondust.dev <span class="directory">~</span>]</span><span class="bash">$ </span><span id="input"><span class="command"></span><span class="param"></span></span></div>';
 		return;
 	},
 	false,

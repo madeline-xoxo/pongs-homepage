@@ -57,7 +57,7 @@ function App() {
 					</div>
 					<div className="line">
 						<span className="hostname">
-							[maddie@moondust.dev <span className="directory">~</span>]
+							[nptr@moondust.dev <span className="directory">~</span>]
 						</span>
 						<span className="bash">$ </span>
 						<span id="input" />

@@ -1,4 +1,4 @@
-# maddies-homepage
+# nptrs-homepage
 possibly the worst code i have written, ever
 
 ## hosting

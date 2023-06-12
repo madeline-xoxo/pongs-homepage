@@ -28,7 +28,7 @@ export const files = [
 			);
 		},
 		permissions: "lrwxr-xr-x",
-		owner: "maddie",
+		owner: "nptr",
 	},
 	{
 		name: "contact-me",
@@ -37,7 +37,7 @@ export const files = [
 			window.open("mailto:maddie@moondust.dev");
 		},
 		permissions: "lrwxr-xr-x",
-		owner: "maddie",
+		owner: "nptr",
 		size: 1853,
 	},
 ] as File[];

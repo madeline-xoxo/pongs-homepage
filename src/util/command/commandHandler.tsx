@@ -27,7 +27,7 @@ export function newLine(dontClear?: boolean, overrideIdChange?: boolean) {
 	const terminal = document.getElementById("terminal")!;
 	if (!overrideIdChange) input.id = "";
 	terminal.innerHTML +=
-		'<div class="line"><span class="hostname">[maddie@moondust.dev <span class="directory">~</span>]</span><span class="bash">$ </span><span id="input"><span class="command"></span><span class="param"></span></span></div>';
+		'<div class="line"><span class="hostname">[nptr@moondust.dev <span class="directory">~</span>]</span><span class="bash">$ </span><span id="input"><span class="command"></span><span class="param"></span></span></div>';
 	if (dontClear) {
 		parse(input.innerText).forEach((token) =>
 			document.getElementById("input")!.append(token.content)
