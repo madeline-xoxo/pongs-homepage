@@ -1,25 +1,29 @@
 import { getCommand, getFile } from "../command/commandUtils";
 import { Lexer, Token } from "./lexer";
 
-class CommandLexer extends Lexer {
-	exps = {
-		quotes: /"[^"\s]*"/g,
-		command: /^[^ ]+/g,
-		spaces: /\s/g,
-		param: /(?:\s)(.*)/g,
-	};
-	callbacks = {
-		command: (match: string): boolean => {
-			if (getFile(match.trim().replace("./", "")) || getCommand(match.trim())) {
-				return true;
-			}
-			return false;
-		}
-	};
-	fallback = "param";
-}
-
 export function parse(text: string): Token[] {
-	const commandLexer = new CommandLexer(text);
-	return commandLexer.tokenize();
+	const lexer = new Lexer(
+		text,
+		[
+			{
+				name: "quotes",
+				regex: /"[^"\s]*"/g,
+			},
+			{
+				name: "command",
+				regex: /^[^ ]+/g,
+				// callback: (match: string): boolean => {
+				// 	return Boolean(
+				// 		getFile(match.trim().replace("./", "")) || getCommand(match.trim())
+				// 	);
+				// },
+			},
+			{
+				name: "param",
+				regex: /(?<=\s).*/g,
+			},
+		],
+		"param"
+	);
+	return lexer.tokenize();
 }

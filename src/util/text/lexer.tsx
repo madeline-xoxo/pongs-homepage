@@ -1,18 +1,22 @@
-/* big todo: rewrite this, its rather scuffed */
+/* file: lexer.tsx */
+/* description: this file implements a class (Lexer) which, when given text, parses it into tokens based off of   */
 
-export function isOverlapping(x1: number, x2: number, y1: number, y2: number): boolean {
+export function isOverlapping(
+	x1: number,
+	x2: number,
+	y1: number,
+	y2: number
+): boolean {
 	return Math.max(x1, y1) <= Math.min(x2, y2);
 }
 
 const getKeyByValue = (obj: any, value: any) =>
-	Object.keys(obj).find(key => obj[key] === value);
+	Object.keys(obj).find((key) => obj[key] === value);
 
 export interface RegexObject {
-	[pattern: string]: RegExp;
-}
-
-export interface Callbacks {
-	[key: string]: (match: string) => boolean;
+	name: string;
+	regex: RegExp;
+	callback?: (match: string) => boolean;
 }
 
 export interface Token {
@@ -35,120 +39,89 @@ class LexerError extends Error {
 }
 
 export class Lexer {
-	text: string;
-	exps: RegexObject = {};
-	callbacks: Callbacks = {};
-	fallback = "";
+	private text: string;
+	private exps: RegexObject[];
+	private fallback = "";
 	tokenize(): Token[] {
-		const tokens: Token[] = [];
-		const expKeys = Object.keys(this.exps).sort((a, b) => Object.keys(this.exps).indexOf(a) - Object.keys(this.exps).indexOf(b));
-		let pos = 0;
-		while (pos < this.text.length) {
-			let matched = false;
-			for (const key of expKeys) {
-				const exp = this.exps[key];
-				let match;
-				while ((match = exp.exec(this.text.slice(pos))) !== null) {
-					if (match.index === 0) {
-						const callback = (() => {
-							const callbacks = Object.entries(this.callbacks);
-							const exps = Object.entries(this.exps).find(currentExp => currentExp[1] === exp)!;
-							const callback = callbacks.find(callback => callback[0] === exps[0]);
-							return callback || undefined;
-						})();
-
-						const tokenContent = match[0];
-						const tokenStart = pos;
-						const tokenEnd = pos + tokenContent.length;
-						const tokenType = key;
-
-						if (callback) {
-							if (callback[1].call(this, tokenContent)) {
-								tokens.push({
-									content: tokenContent,
-									type: tokenType,
-									start: tokenStart,
-									end: tokenEnd,
-								});
-							} else {
-								tokens.push({
-									content: tokenContent,
-									type: this.fallback,
-									start: tokenStart,
-									end: tokenEnd,
-								});
-							}
-						} else {
-							if (key === "param") {
-								let paramPos = 0;
-								while (paramPos < tokenContent.length) {
-									let paramMatched = false;
-									for (const paramKey of expKeys) {
-										if (paramKey === "param") {
-											continue;
-										}
-
-										const paramExp = this.exps[paramKey];
-										let paramMatch;
-										while ((paramMatch = paramExp.exec(tokenContent.slice(paramPos))) !== null) {
-											if (paramMatch.index === 0) {
-												tokens.push({
-													content: paramMatch[0],
-													type: paramKey === "command" ? "param" : paramKey,
-													start: tokenStart + paramPos,
-													end: tokenStart + paramPos + paramMatch[0].length,
-												});
-												paramPos += paramMatch[0].length;
-												paramMatched = true;
-												break;
-											}
-										}
-
-										if (paramMatched) {
-											break;
-										}
-									}
-
-									if (!paramMatched) {
-										tokens.push({
-											content: tokenContent.charAt(paramPos),
-											type: tokenType,
-											start: tokenStart + paramPos,
-											end: tokenStart + paramPos + 1,
-										});
-										paramPos++;
-									}
-								}
-							} else {
-								tokens.push({
-									content: tokenContent,
-									type: tokenType,
-									start: tokenStart,
-									end: tokenEnd,
-								});
-							}
-						}
-
-						pos += tokenContent.length;
-						matched = true;
-						break;
-					}
-				}
-
-				if (matched) {
-					break;
-				}
-			}
-
-			if (!matched) {
-				throw new LexerError(`Invalid input at position ${pos}: "${this.text.slice(pos)}"`);
-			}
+		let tokens: Token[] = [];
+		for (const exp of this.exps.reverse()) {
+			const match = exp.regex.exec(this.text);
+			if (!match) continue;
+			const [start, end] = [match.index, match.index + match[0].length];
+			tokens.push({
+				content: match[0],
+				type: exp.name,
+				start,
+				end,
+			});
 		}
-
-		return tokens;
+		tokens = tokens.sort((a, b) => a.start - b.start);
+		const overlappingTokens = tokens.filter((token) =>
+			tokens.some((otherToken) => {
+				return (
+					token !== otherToken &&
+					isOverlapping(
+						token.start,
+						token.end,
+						otherToken.start,
+						otherToken.end
+					)
+				);
+			})
+		);
+		// split tokens that overlap into multiple tokens
+		overlappingTokens.forEach((token) => {
+			const overlappingToken = tokens.find((otherToken) => {
+				return (
+					token !== otherToken &&
+					isOverlapping(
+						token.start,
+						token.end,
+						otherToken.start,
+						otherToken.end
+					)
+				);
+			});
+			if (!overlappingToken) return;
+			if (
+				!(
+					this.exps.indexOf(this.exps.find((exp) => exp.name === token.type)!) >
+					this.exps.indexOf(
+						this.exps.find((exp) => exp.name === overlappingToken.type)!
+					)
+				)
+			)
+				return;
+			console.log("replacing token", overlappingToken.type, "with", token.type);
+			if (overlappingToken.end < token.start) return;
+			overlappingToken.end = token.start;
+		});
+		const gaps = tokens
+			.map((token, index) => {
+				const nextToken = tokens[index + 1];
+				if (!nextToken) return;
+				if (nextToken.start === token.end) return;
+				return {
+					start: token.end,
+					end: nextToken.start,
+				};
+			})
+			.filter((e) => e !== undefined);
+		console.log(gaps);
+		gaps.forEach((gap) => {
+			if (!gap) return;
+			tokens.push({
+				content: this.text.slice(gap.start, gap.end),
+				type: this.fallback,
+				start: gap.start,
+				end: gap.end,
+			});
+		});
+		return tokens.filter((token) => token.start !== 0 || token.end !== 0);
 	}
-	constructor(text: string) {
+	constructor(text: string, exps: RegexObject[], fallback: string) {
 		this.text = text;
+		this.exps = exps;
+		this.fallback = fallback;
 	}
 }
-
