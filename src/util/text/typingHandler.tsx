@@ -6,6 +6,8 @@ import { handleControl } from "./controlHandling";
 import { parse } from "./syntaxHandler";
 import React from "react";
 
+const doubles = ["{}", "[]", "()"];
+
 interface File {
 	name: string;
 	exec: (args: string[]) => void;
@@ -94,7 +96,12 @@ export function type(e: KeyboardEvent) {
 	} else if (e.ctrlKey) {
 		handleControl(e.key);
 	} else {
+		// const double = doubles.find((double) => double[0] === e.key);
+		// if (double) {
+		// text += double;
+		// } else {
 		text += e.key;
+		// }
 	}
 	const tokens = parse(text);
 	console.log(tokens);

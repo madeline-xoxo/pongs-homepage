@@ -67,9 +67,62 @@ function split(state: State, tokens: Token[], defaultValue?: Token) {
 
 export class Lexer {
 	private text: string;
-	private exps: RegexObject[];
 	private fallback = "";
 	tokenize(): Token[] {
+		const vals = [
+			"true",
+			"false",
+			"null",
+			"undefined",
+			"const",
+			"let",
+			"var",
+			"function",
+			"return",
+			"if",
+			"else",
+			"for",
+			"while",
+			"do",
+			"switch",
+			"case",
+			"break",
+			"continue",
+			"try",
+			"catch",
+			"finally",
+			"throw",
+			"new",
+			"delete",
+			"in",
+			"instanceof",
+			"typeof",
+			"void",
+			"this",
+			"super",
+			"class",
+			"extends",
+			"import",
+			"export",
+			"default",
+			"async",
+			"await",
+			"yield",
+			"from",
+			"as",
+			"get",
+			"set",
+			"constructor",
+			"debugger",
+			"with",
+			"eval",
+			"arguments",
+			"require",
+			"module",
+			"exports",
+			"globalThis",
+			"window",
+		];
 		const symbolList = [
 			`{`,
 			`}`,
@@ -105,7 +158,7 @@ export class Lexer {
 			currentTokenIndex: 0,
 			index: 0,
 		} as State;
-		const tokens = [] as Token[];
+		let tokens = [] as Token[];
 		split(state, tokens);
 		const text = this.text.split("");
 		text.forEach((char, index) => {
@@ -127,6 +180,9 @@ export class Lexer {
 			}
 			if (state.inQuote) {
 				tokens[state.currentTokenIndex].type = "quotes";
+			}
+			if (char === " ") {
+				split(state, tokens);
 			}
 			if (char === '"') {
 				split(state, tokens, {
@@ -150,11 +206,31 @@ export class Lexer {
 				tokens[state.currentTokenIndex].content += char;
 			}
 		});
+		tokens = tokens.filter((token) => token.content !== "");
+		if (tokens[0]) {
+			if (tokens[0].content.trim() === "eval") {
+				// apply javascript style syntax highlighting
+				tokens.slice(1).forEach((token, index) => {
+					if (vals.includes(token.content.trim())) {
+						token.type = "constant";
+					}
+					if (token.content.trim() === ")") {
+						if (
+							tokens[index - 1] &&
+							tokens[index - 1].content !== ")" &&
+							tokens[index - 1].content !== "(" &&
+							tokens[index - 1].content.trim() !== "eval"
+						) {
+							tokens[index - 1].type = "unconstant";
+						}
+					}
+				});
+			}
+		}
 		return tokens;
 	}
-	constructor(text: string, exps: RegexObject[], fallback: string) {
+	constructor(text: string, fallback: string) {
 		this.text = text;
-		this.exps = exps;
 		this.fallback = fallback;
 	}
 }

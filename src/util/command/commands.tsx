@@ -234,7 +234,12 @@ new Command("cat", function (this: Command, args) {
 
 new Command("eval", function (this: Command, args) {
 	const terminal = document.getElementById("terminal");
-	terminal?.append(eval(args.join(" ")) || "");
+	try {
+		terminal?.append(eval(args.join(" ")) || "");
+		//      vvv    we shouldn't cast to any, but i'm too lazy to fix this
+	} catch (e: any) {
+		terminal!.innerHTML += `<span class="error">${e}</span>`;
+	}
 });
 new Command(
 	"clear",

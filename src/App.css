@@ -17,7 +17,7 @@
     box-sizing: border-box;
     padding: 60px;
     z-index: 2;
-    box-shadow: 0px 12px 50px -13px rgba(0, 0, 0, 0.23);
+    /* box-shadow: 0px 12px 50px -13px rgba(0, 0, 0, 0.23); */
     border-radius: 5px;
 }
 
@@ -34,7 +34,7 @@
     white-space: pre-wrap;
     line-break: anywhere;
     word-break: break-all;
-    box-shadow: 0px 36px 50px px rgba(0, 0, 0, 0.15);
+    /* box-shadow: 0px 36px 50px px rgba(0, 0, 0, 0.15); */
     border: solid thin #7e8a8599;
     border-radius: 2.5px;
     cursor: default;
@@ -100,6 +100,18 @@
 
 .param {
     color: #677d84;
+}
+
+.error {
+    color: #d07171;
+}
+
+.constant {
+    color: #b34bc5;
+}
+
+.unconstant {
+    color: #b00a4f;
 }
 
 #footer {
