@@ -1,4 +1,4 @@
-# pongs-homepage
+# maddies-homepage
 possibly the worst code i have written, ever
 
 ## hosting
