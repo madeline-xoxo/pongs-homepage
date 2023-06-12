@@ -218,35 +218,24 @@ new Command("help", function (this: Command, args) {
 	);
 });
 
-new Command(
-	"cat",
-	function (this: Command, args) {
-		const terminal = document.getElementById("terminal");
-		const dashedArgs = args.filter((arg) => arg.startsWith("-"));
-		if (dashedArgs.length > 0) {
-			terminal?.append(
-				`${this.name}: unrecognised option -- '${dashedArgs[0].replace(
-					"-",
-					""
-				)}'`
-			);
-			return;
-		}
-		const file = getFile(args.at(-1)!);
-		if (!file) return terminal?.append(`${this.name}: not found -- ${args[0]}`);
-		terminal?.append(`\n${file.exec.toString()}\n`);
-	},
-	true
-);
+new Command("cat", function (this: Command, args) {
+	const terminal = document.getElementById("terminal");
+	const dashedArgs = args.filter((arg) => arg.startsWith("-"));
+	if (dashedArgs.length > 0) {
+		terminal?.append(
+			`${this.name}: unrecognised option -- '${dashedArgs[0].replace("-", "")}'`
+		);
+		return;
+	}
+	const file = getFile(args.at(-1)!);
+	if (!file) return terminal?.append(`${this.name}: not found -- ${args[0]}`);
+	terminal?.append(`\n${file.exec.toString()}\n`);
+});
 
-new Command(
-	"eval",
-	function (this: Command, args) {
-		const terminal = document.getElementById("terminal");
-		terminal?.append(eval(args.join(" ")) || "");
-	},
-	true
-);
+new Command("eval", function (this: Command, args) {
+	const terminal = document.getElementById("terminal");
+	terminal?.append(eval(args.join(" ")) || "");
+});
 new Command(
 	"clear",
 	function (this: Command, args) {
