@@ -24,7 +24,7 @@ export const files = [
 		exec: (args) => {
 			const terminal = document.getElementById("terminal");
 			terminal?.append(
-				"hi! i'm maddie, a 14 year old developer from the uk. i like to code in typescript, and i'm currently learning rust. i like to play csgo in my free time. i love tv girl!! <3"
+				"hi! i'm nptr, a 14 year old developer from the uk. i like to code in typescript, and i'm currently learning rust. i like to play csgo in my free time. i love tv girl!! <3"
 			);
 		},
 		permissions: "lrwxr-xr-x",
