@@ -262,3 +262,49 @@ new Command(
 	false,
 	true
 );
+
+new Command("nav", function (this: Command, args) {
+	const terminal = document.getElementById("terminal");
+	const dashedArgs = args.filter((arg) => arg.startsWith("-"));
+	dashedArgs.forEach((arg) => {
+		switch (arg) {
+			case "-h": {
+				terminal?.append(
+					`usage: ${this.name} [-ha] [url]\n\n-h: show this help message and exit\n-a: add an alias for a url (takes params name and url)\n\nurl: the url to navigate to`
+				);
+				return;
+			}
+			case "-a": {
+				const name = args[args.indexOf(arg) + 1];
+				const url = args[args.indexOf(arg) + 2];
+				if (!name) return;
+				if (!url) return;
+				if (name.includes("date"))
+					return terminal?.append(
+						`${this.name}: ${name}: invalid alias (cannot contain "date")`
+					);
+				console.log(name, url);
+				localStorage.setItem(name, url);
+				return;
+			}
+			default: {
+				terminal?.append(
+					`${this.name}: unrecognised option -- '${arg.replace("-", "")}'`
+				);
+				return;
+			}
+		}
+	});
+	if (localStorage.getItem(args.at(-1)!) !== null) {
+		window.open(localStorage.getItem(args.at(-1)!)!, "_blank");
+		return;
+	}
+	if (!args.at(-1)) return;
+	if (dashedArgs.length > 0) return;
+	if (args.at(-1) === "date")
+		return terminal?.append(
+			`${this.name}: date: invalid url (cannot be "date")`
+		);
+	const url = args.join(" ");
+	window.open(url, "_blank");
+});
