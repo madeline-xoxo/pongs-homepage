@@ -37,7 +37,6 @@ export function newLine(dontClear?: boolean, overrideIdChange?: boolean) {
 
 export function execute(text: string) {
 	const parsed = text.trim().replace("./", "./ ").split(" ");
-	console.log(parsed);
 	const terminal = document.getElementById("terminal");
 	const command = getCommand(parsed[0], true);
 	if (command) {

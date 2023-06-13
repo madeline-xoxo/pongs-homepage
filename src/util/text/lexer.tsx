@@ -115,13 +115,13 @@ export class Lexer {
 			"constructor",
 			"debugger",
 			"with",
-			"eval",
 			"arguments",
 			"require",
 			"module",
 			"exports",
 			"globalThis",
 			"window",
+			"document",
 		];
 		const symbolList = [
 			`{`,
@@ -191,7 +191,6 @@ export class Lexer {
 					end: 0,
 					type: "quotes",
 				});
-				console.log(state);
 				state.inQuote = !state.inQuote;
 				split(state, tokens);
 			} else if (symbolList.includes(char)) {
@@ -215,13 +214,21 @@ export class Lexer {
 						token.type = "constant";
 					}
 					if (token.content.trim() === ")") {
-						if (
-							tokens[index - 1] &&
-							tokens[index - 1].content !== ")" &&
-							tokens[index - 1].content !== "(" &&
-							tokens[index - 1].content.trim() !== "eval"
-						) {
-							tokens[index - 1].type = "unconstant";
+						// if (
+						// 	tokens[index - 1] &&
+						// 	tokens[index - 1].content !== ")" &&
+						// 	tokens[index - 1].content !== "(" &&
+						// 	tokens[index - 1].content.trim() !== "eval"
+						// ) {
+						// 	tokens[index - 1].type = "unconstant";
+						// }
+						for (let i = index; i >= 0; i--) {
+							const item = tokens[i];
+							if (item === token) continue;
+							if (item.content === "(") {
+								tokens[i - 1].type = "unconstant";
+								return;
+							}
 						}
 					}
 				});

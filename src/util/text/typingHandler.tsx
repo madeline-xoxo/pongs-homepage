@@ -104,7 +104,6 @@ export function type(e: KeyboardEvent) {
 		// }
 	}
 	const tokens = parse(text);
-	console.log(tokens);
 	input.innerHTML = ""; // kind of bad
 	tokens.forEach((token) =>
 		input.append(
