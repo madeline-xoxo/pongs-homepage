@@ -148,3 +148,22 @@
     flex-direction: column;
     flex-flow: column wrap;
 }
+
+@media (prefers-color-scheme: dark) {
+    .main {
+        background-color: #242424;
+    }
+
+    #frame {
+        visibility: hidden;
+    }
+
+    #frame>* {
+        visibility: visible;
+    }
+
+    #terminal {
+        background-color: #282928;
+        border: solid thin #464746;
+    }
+}

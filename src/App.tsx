@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import React from "react";
 import "./util/command/commands";
-import "./App.css";
+import "./css/main.css";
 import { type } from "./util/text/typingHandler";
 import { commands } from "./util/command/commandHandler";
 

@@ -221,7 +221,11 @@ export class Lexer {
 							const item = tokens[i];
 							if (item === token) continue;
 							if (item.content === "(") {
-								if (tokens[i - 1].type === "quotes") return;
+								if (
+									tokens[i - 1].type === "quotes" ||
+									tokens[i - 1].content.trim() === "eval"
+								)
+									return;
 								tokens[i - 1].type = "unconstant";
 								return;
 							}
