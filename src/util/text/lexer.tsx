@@ -25,8 +25,6 @@ export interface RegexObject {
 export interface Token {
 	content: string;
 	type: string;
-	start: number;
-	end: number;
 }
 
 export interface Range {
@@ -58,8 +56,6 @@ function split(state: State, tokens: Token[], defaultValue?: Token) {
 		state.currentTokenIndex =
 			tokens.push({
 				content: "",
-				start: 0,
-				end: 0,
 				type: "",
 			}) - 1;
 	}
@@ -184,20 +180,19 @@ export class Lexer {
 			if (char === " ") {
 				split(state, tokens);
 			}
-			if (char === '"') {
+			if (char === '"' && text[index - 1] !== "\\") {
 				split(state, tokens, {
 					content: char,
-					start: 0,
-					end: 0,
 					type: "quotes",
 				});
 				state.inQuote = !state.inQuote;
 				split(state, tokens);
-			} else if (symbolList.includes(char)) {
+			} else if (
+				symbolList.includes(char) &&
+				tokens[state.currentTokenIndex].type !== "quotes"
+			) {
 				split(state, tokens, {
 					content: char,
-					start: 0,
-					end: 0,
 					type: "symbol",
 				});
 				split(state, tokens);
@@ -210,7 +205,7 @@ export class Lexer {
 			if (tokens[0].content.trim() === "eval") {
 				// apply javascript style syntax highlighting
 				tokens.slice(1).forEach((token, index) => {
-					if (vals.includes(token.content.trim())) {
+					if (vals.includes(token.content.trim()) && token.type !== "quotes") {
 						token.type = "constant";
 					}
 					if (token.content.trim() === ")") {
@@ -226,6 +221,7 @@ export class Lexer {
 							const item = tokens[i];
 							if (item === token) continue;
 							if (item.content === "(") {
+								if (tokens[i - 1].type === "quotes") return;
 								tokens[i - 1].type = "unconstant";
 								return;
 							}
